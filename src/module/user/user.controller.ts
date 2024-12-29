@@ -6,10 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserDTO } from 'src/dto';
 import { UserService } from './user.service';
+import { UserModifiedInterceptor } from './user.interceptor';
 
+@UseInterceptors(UserModifiedInterceptor)
 @Controller('users')
 export class UserController {
   constructor(private UserService: UserService) {}
