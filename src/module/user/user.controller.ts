@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Res,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserDTO } from 'src/dto';
@@ -34,5 +35,10 @@ export class UserController {
   @Delete('delete-user/:userId')
   deleteUser(@Param() Params: any) {
     return this.UserService.deleteUser(Params.userId);
+  }
+
+  @Get('xls')
+  exportXLS(@Res() res: Response) {
+    this.UserService.exportXLS(res);
   }
 }
