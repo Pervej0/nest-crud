@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDate,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -15,7 +16,7 @@ export class UserDTO {
   @IsNotEmpty()
   email: string;
 
-  @IsEmail()
+  @IsString()
   @IsNotEmpty()
   password: string;
 
@@ -34,4 +35,12 @@ export class UserDTO {
   @IsString()
   @IsNotEmpty()
   country: string;
+
+  @IsString()
+  @IsNotEmpty()
+  createdAt: string;
+
+  @IsString()
+  @IsNotEmpty()
+  updatedAt: string;
 }

@@ -15,13 +15,15 @@ datasource db {
 
 model User {
   id        String  @id @default(uuid())
-  fullName  String
-  email     String  @unique
+  fullName  String  @db.VarChar(100)
+  email     String  @unique @db.VarChar(255)
   password  String
-  phone     Int
+  phone     String
+  address   String  @db.VarChar(255)
+  country   String  @db.VarChar(100)
   isStudent Boolean
-  address   String
-  country   String
+
+  createdAt DateTime @default(now())
 
   @@map("users")
 }
