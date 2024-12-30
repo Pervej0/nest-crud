@@ -1,7 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismadbService } from 'src/prismadb/prismadb.service';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +21,16 @@ export class AuthService {
       where: { email: payload.email },
     });
 
-    if (user?.password !== payload.password) {
+    if (!user) {
+      throw new NotFoundException('Invalid user');
+    }
+
+    const matchedPassword = await argon2.verify(
+      user.password,
+      payload.password,
+    );
+
+    if (!matchedPassword) {
       throw new UnauthorizedException();
     }
 

@@ -1,7 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-// import { UserDTO } from 'src/dto';
 import { PrismadbService } from 'src/prismadb/prismadb.service';
 
 @Injectable()

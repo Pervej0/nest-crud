@@ -80,10 +80,9 @@ export class CreateUserInterceptor implements NestInterceptor {
     next: CallHandler<any>,
   ): Promise<Observable<any>> {
     const body = context.switchToHttp().getRequest().body;
-    console.log(body, 'pppppp');
     const hash = await argon2.hash(body.password);
     body.password = hash;
-    console.log(body, 'xxxx');
+
     return next.handle().pipe();
   }
 }
