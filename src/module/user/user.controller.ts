@@ -6,22 +6,22 @@ import {
   Param,
   Patch,
   Post,
-  Res,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserDTO } from 'src/dto';
 import { UserService } from './user.service';
-import { UserModifiedInterceptor } from './user.interceptor';
+import { CreateUserInterceptor, UserXlsInterceptor } from './user.interceptor';
 
-@UseInterceptors(UserModifiedInterceptor)
 @Controller('users')
 export class UserController {
   constructor(private UserService: UserService) {}
+
   @Get()
   getUsers() {
     return this.UserService.getUsers();
   }
 
+  @UseInterceptors(CreateUserInterceptor)
   @Post('create-user')
   createUser(@Body() dto: UserDTO) {
     return this.UserService.createUser(dto);
@@ -37,8 +37,9 @@ export class UserController {
     return this.UserService.deleteUser(Params.userId);
   }
 
-  @Get('xls')
-  exportXLS(@Res() res: Response) {
-    this.UserService.exportXLS(res);
+  @UseInterceptors(UserXlsInterceptor)
+  @Get('download-xls')
+  exportXLS() {
+    return this.UserService.exportXLS();
   }
 }

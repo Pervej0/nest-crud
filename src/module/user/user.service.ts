@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 // import { UserDTO } from 'src/dto';
 import { PrismadbService } from 'src/prismadb/prismadb.service';
-import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class UserService {
@@ -23,6 +24,7 @@ export class UserService {
 
   async createUser(dto: any) {
     const user = await this.prisma.user.create({ data: dto });
+
     return user;
   }
 
@@ -52,7 +54,7 @@ export class UserService {
     }
   }
 
-  async exportXLS(res: Response) {
+  async exportXLS() {
     const users = await this.prisma.user.findMany({
       select: {
         fullName: true,
@@ -63,58 +65,6 @@ export class UserService {
         isStudent: true,
       },
     });
-
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('TestExportXLS');
-
-    worksheet.columns = [
-      {
-        header: 'fullName',
-        key: 'fullName',
-      },
-      {
-        header: 'email',
-        key: 'email',
-      },
-      {
-        header: 'phone',
-        key: 'phone',
-      },
-      {
-        header: 'address',
-        key: 'address',
-      },
-      {
-        header: 'country',
-        key: 'country',
-      },
-      {
-        header: 'isStudent',
-        key: 'isStudent',
-      },
-    ];
-
-    worksheet.addRow(
-      users.map((user) => ({
-        fullName: user.fullName,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        country: user.country,
-        isStudent: user.isStudent,
-      })),
-    );
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    res.header(
-      'Content-Disposition',
-      'attachment; filename=anlikodullendirme.xlsx',
-    );
-    res.type(
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    );
-    res.send(buffer);
-
-    return;
+    return users;
   }
 }
